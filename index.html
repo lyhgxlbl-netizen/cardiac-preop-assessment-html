@@ -1,0 +1,882 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>心脏病患者接受非心脏手术术前麻醉评估助手</title>
+
+  <!-- CSS 样式区 -->
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #667085;
+      --line: #d8e1ec;
+      --blue: #1769e0;
+      --blue-soft: #eaf2ff;
+      --green: #16804d;
+      --green-soft: #ecfdf3;
+      --yellow: #a15c00;
+      --yellow-soft: #fffaeb;
+      --red: #b42318;
+      --red-soft: #fef3f2;
+      --shadow: 0 10px 28px rgba(23, 32, 51, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      line-height: 1.55;
+    }
+
+    header {
+      padding: 20px 16px 16px;
+      background: linear-gradient(135deg, #ffffff 0%, #eaf2ff 100%);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .header-inner,
+    main,
+    footer {
+      max-width: 1040px;
+      margin: 0 auto;
+    }
+
+    .eyebrow {
+      margin: 0 0 6px;
+      color: var(--blue);
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      font-size: 13px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(24px, 6vw, 40px);
+      line-height: 1.18;
+    }
+
+    .subtitle {
+      margin: 10px 0 0;
+      color: var(--muted);
+      max-width: 780px;
+    }
+
+    .disclaimer {
+      margin-top: 14px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border-left: 5px solid var(--blue);
+      background: var(--blue-soft);
+      font-weight: 800;
+    }
+
+    main {
+      padding: 16px;
+    }
+
+    .grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .card + .card {
+      margin-top: 16px;
+    }
+
+    .card h2 {
+      margin: 0 0 12px;
+      font-size: 20px;
+    }
+
+    .card h3 {
+      margin: 14px 0 8px;
+      font-size: 16px;
+    }
+
+    label {
+      display: grid;
+      gap: 6px;
+      font-weight: 700;
+      color: #263348;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      min-height: 44px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 10px 12px;
+      color: var(--text);
+      background: #fff;
+      font: inherit;
+    }
+
+    input[readonly] {
+      background: #f8fafc;
+      color: var(--muted);
+    }
+
+    textarea {
+      min-height: 260px;
+      resize: vertical;
+      white-space: pre-wrap;
+    }
+
+    .two,
+    .three {
+      display: grid;
+      gap: 12px;
+    }
+
+    .checkbox-grid {
+      display: grid;
+      gap: 10px;
+    }
+
+    .check {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      min-height: 44px;
+      padding: 11px 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      font-weight: 650;
+    }
+
+    .check input {
+      width: 18px;
+      min-height: 18px;
+      margin-top: 3px;
+      flex: 0 0 auto;
+    }
+
+    .hint {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .small-note {
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: #f8fafc;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .acs-box {
+      padding: 14px;
+      border-radius: 14px;
+      border: 1px solid #b8cdf5;
+      background: var(--blue-soft);
+    }
+
+    .button-row {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    button,
+    .link-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      border: 0;
+      border-radius: 14px;
+      padding: 12px 16px;
+      background: var(--blue);
+      color: #fff;
+      text-decoration: none;
+      font-weight: 800;
+      font-size: 16px;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    button.secondary {
+      background: #ffffff;
+      color: var(--text);
+      border: 1px solid var(--line);
+    }
+
+    .status {
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      font-weight: 800;
+    }
+
+    .status.green {
+      color: var(--green);
+      background: var(--green-soft);
+      border-color: #abefc6;
+    }
+
+    .status.yellow {
+      color: var(--yellow);
+      background: var(--yellow-soft);
+      border-color: #fedf89;
+    }
+
+    .status.red {
+      color: var(--red);
+      background: var(--red-soft);
+      border-color: #fecdca;
+    }
+
+    .result-list {
+      margin: 8px 0 0;
+      padding-left: 20px;
+    }
+
+    .result-list li {
+      margin: 6px 0;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 34px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #f2f4f7;
+      border: 1px solid var(--line);
+      color: #344054;
+      font-weight: 750;
+      font-size: 14px;
+    }
+
+    .footer-note {
+      padding: 20px 16px 28px;
+      color: var(--muted);
+      text-align: center;
+      font-weight: 700;
+    }
+
+    @media (min-width: 720px) {
+      header {
+        padding: 30px 24px 24px;
+      }
+
+      main {
+        padding: 24px;
+      }
+
+      .two {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .three {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .checkbox-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .button-row {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- HTML 结构区 -->
+  <header>
+    <div class="header-inner">
+      <p class="eyebrow">HTML 免费测试版</p>
+      <h1>心脏病患者接受非心脏手术术前麻醉评估助手</h1>
+      <p class="subtitle">用于麻醉医生、规培医生进行术前心血管风险评估的教学与临床辅助。</p>
+      <div class="disclaimer">本工具仅用于教学和临床辅助评估，不替代医生最终判断。</div>
+    </div>
+  </header>
+
+  <main>
+    <section class="card" aria-labelledby="patient-title">
+      <h2 id="patient-title">1. 患者基本信息</h2>
+      <div class="three">
+        <label>年龄
+          <input id="age" type="number" min="0" max="120" inputmode="numeric" placeholder="岁">
+        </label>
+        <label>性别
+          <select id="sex">
+            <option value="">未填写</option>
+            <option value="男">男</option>
+            <option value="女">女</option>
+          </select>
+        </label>
+        <label>ASA 分级
+          <select id="asa">
+            <option value="">未填写</option>
+            <option value="I">I</option>
+            <option value="II">II</option>
+            <option value="III">III</option>
+            <option value="IV">IV</option>
+            <option value="V">V</option>
+          </select>
+        </label>
+        <label>身高
+          <input id="height" type="number" min="0" step="0.1" inputmode="decimal" placeholder="cm">
+        </label>
+        <label>体重
+          <input id="weight" type="number" min="0" step="0.1" inputmode="decimal" placeholder="kg">
+        </label>
+        <label>BMI 自动计算
+          <input id="bmi" readonly placeholder="自动计算">
+        </label>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="surgery-title">
+      <h2 id="surgery-title">2. 手术信息与手术风险</h2>
+      <div class="two">
+        <label>手术名称
+          <input id="surgeryName" type="text" placeholder="例如：腹腔镜胆囊切除术">
+        </label>
+        <label>手术时机
+          <select id="surgeryTiming">
+            <option value="">未填写</option>
+            <option value="急诊">急诊</option>
+            <option value="择期">择期</option>
+          </select>
+        </label>
+        <label>手术风险
+          <select id="surgeryRisk">
+            <option value="">未填写</option>
+            <option value="低危">低危</option>
+            <option value="中危">中危</option>
+            <option value="高危">高危</option>
+          </select>
+        </label>
+        <label class="check">
+          <input id="highRiskSurgery" type="checkbox">
+          是否为 RCRI 高危手术
+        </label>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="acs-title">
+      <h2 id="acs-title">3. ACS-NSQIP 官方计算器入口</h2>
+      <div class="acs-box">
+        <h3>ACS-NSQIP Surgical Risk Calculator</h3>
+        <p class="hint">请在新窗口打开官方计算器，由医生手动填写结果。本应用不使用 iframe，不自动化填写，不复制 ACS-NSQIP 计算逻辑。</p>
+        <a class="link-button" href="https://riskcalculator.facs.org/" target="_blank" rel="noopener noreferrer">
+          打开 ACS-NSQIP 官方计算器
+        </a>
+      </div>
+
+      <h3>ACS-NSQIP 手动填写结果</h3>
+      <div class="two">
+        <label>Serious complication risk (%)
+          <input id="nsqipSerious" type="number" min="0" step="0.1" inputmode="decimal">
+        </label>
+        <label>Any complication risk (%)
+          <input id="nsqipAny" type="number" min="0" step="0.1" inputmode="decimal">
+        </label>
+        <label>Cardiac complication risk (%)
+          <input id="nsqipCardiac" type="number" min="0" step="0.1" inputmode="decimal">
+        </label>
+        <label>Death risk (%)
+          <input id="nsqipDeath" type="number" min="0" step="0.1" inputmode="decimal">
+        </label>
+      </div>
+      <div class="small-note">ACS-NSQIP 结果：由医生通过官方计算器手动填写，仅供围术期风险沟通与辅助评估使用。</div>
+    </section>
+
+    <section class="card" aria-labelledby="history-title">
+      <h2 id="history-title">4. 心脏病史</h2>
+      <div class="checkbox-grid">
+        <label class="check"><input id="cad" type="checkbox">冠心病</label>
+        <label class="check"><input id="mi" type="checkbox">既往心肌梗死</label>
+        <label class="check"><input id="pci" type="checkbox">PCI 术后</label>
+        <label class="check"><input id="cabg" type="checkbox">CABG 术后</label>
+        <label class="check"><input id="heartFailure" type="checkbox">心力衰竭</label>
+        <label class="check"><input id="af" type="checkbox">房颤</label>
+        <label class="check"><input id="arrhythmia" type="checkbox">其他心律失常</label>
+        <label class="check"><input id="pacemaker" type="checkbox">起搏器</label>
+        <label class="check"><input id="icd" type="checkbox">ICD</label>
+        <label class="check"><input id="valveDisease" type="checkbox">瓣膜病</label>
+        <label class="check"><input id="stroke" type="checkbox">脑血管病史</label>
+        <label class="check"><input id="insulinDiabetes" type="checkbox">胰岛素治疗糖尿病</label>
+        <label class="check"><input id="ckd" type="checkbox">慢性肾功能不全</label>
+      </div>
+
+      <h3>活动性心脏病风险提示</h3>
+      <div class="checkbox-grid">
+        <label class="check"><input id="unstableAngina" type="checkbox">新近或不稳定心绞痛（预留）</label>
+        <label class="check"><input id="decompensatedHF" type="checkbox">失代偿心衰</label>
+        <label class="check"><input id="seriousArrhythmia" type="checkbox">严重心律失常</label>
+        <label class="check"><input id="severeValveDisease" type="checkbox">严重瓣膜病</label>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="mets-title">
+      <h2 id="mets-title">5. 功能状态评估</h2>
+      <p class="hint">采用简化 METs 判断。勾选患者可以完成的活动。</p>
+      <div class="checkbox-grid">
+        <label class="check"><input id="walkBlocks" type="checkbox">能否平地步行 1-2 个街区</label>
+        <label class="check"><input id="climbStairs" type="checkbox">能否上一层楼</label>
+        <label class="check"><input id="lightHousework" type="checkbox">能否做轻家务</label>
+        <label class="check"><input id="moderateActivity" type="checkbox">能否进行中等体力活动</label>
+      </div>
+      <div id="metsStatus" class="status yellow" style="margin-top: 12px;">功能状态较差或不明确：&lt;4 METs 或无法判断</div>
+    </section>
+
+    <section class="card" aria-labelledby="exam-title">
+      <h2 id="exam-title">6. 检查结果</h2>
+      <div class="two">
+        <label>最近 ECG
+          <select id="ecg">
+            <option value="未做">未做</option>
+            <option value="正常">正常</option>
+            <option value="异常">异常</option>
+          </select>
+        </label>
+        <label>最近 Echo
+          <select id="echo">
+            <option value="未做">未做</option>
+            <option value="正常">正常</option>
+            <option value="异常">异常</option>
+          </select>
+        </label>
+        <label>LVEF 数值
+          <input id="lvef" type="number" min="0" max="100" step="1" inputmode="numeric" placeholder="%">
+        </label>
+        <label>BNP 或 NT-proBNP
+          <select id="bnp">
+            <option value="未做">未做</option>
+            <option value="正常">正常</option>
+            <option value="升高">升高</option>
+          </select>
+        </label>
+        <label>Troponin
+          <select id="troponin">
+            <option value="未做">未做</option>
+            <option value="正常">正常</option>
+            <option value="升高">升高</option>
+          </select>
+        </label>
+        <label>肌酐数值
+          <input id="creatinine" type="number" min="0" step="1" inputmode="decimal" placeholder="μmol/L">
+        </label>
+      </div>
+      <div class="checkbox-grid" style="margin-top: 12px;">
+        <label class="check"><input id="dyspneaOrChange" type="checkbox">存在呼吸困难或临床状态变化</label>
+      </div>
+      <div id="creatinineStatus" class="pill" style="margin-top: 12px;">肌酐 &gt;177 μmol/L：未判断</div>
+    </section>
+
+    <section class="card" aria-labelledby="rcri-title">
+      <h2 id="rcri-title">7. RCRI 自动评分</h2>
+      <div id="rcriStatus" class="status yellow">RCRI = 0</div>
+      <h3>得分原因</h3>
+      <ul id="rcriReasons" class="result-list">
+        <li>暂无得分项目</li>
+      </ul>
+    </section>
+
+    <section class="card" aria-labelledby="recommend-title">
+      <h2 id="recommend-title">8. 辅助评估建议</h2>
+      <div class="small-note">本工具仅供教学和临床辅助参考，不替代医生最终判断。以下内容为辅助建议，不是自动诊断。</div>
+      <ul id="recommendations" class="result-list"></ul>
+    </section>
+
+    <section class="card" aria-labelledby="report-title">
+      <h2 id="report-title">9. 一键复制评估报告</h2>
+      <div class="button-row">
+        <button type="button" onclick="generateReport()">生成评估报告</button>
+        <button type="button" class="secondary" onclick="copyReport()">复制评估报告</button>
+        <button type="button" class="secondary" onclick="resetForm()">清空重新评估</button>
+      </div>
+      <label style="margin-top: 14px;">结构化评估报告
+        <textarea id="report" readonly placeholder="点击“生成评估报告”后显示。"></textarea>
+      </label>
+      <div class="small-note">本工具仅用于教学和临床辅助评估，不替代医生最终判断。</div>
+    </section>
+  </main>
+
+  <footer class="footer-note">
+    v0.1 HTML Free Test Version
+  </footer>
+
+  <!-- JavaScript 数据与逻辑区 -->
+  <script>
+    const DISCLAIMER = "本工具仅用于教学和临床辅助评估，不替代医生最终判断。";
+    const NSQIP_NOTE = "ACS-NSQIP 结果：由医生通过官方计算器手动填写，仅供围术期风险沟通与辅助评估使用。";
+
+    function $(id) {
+      return document.getElementById(id);
+    }
+
+    function value(id) {
+      return $(id).value.trim();
+    }
+
+    function checked(id) {
+      return $(id).checked;
+    }
+
+    function numberValue(id) {
+      const num = Number(value(id));
+      return Number.isFinite(num) ? num : null;
+    }
+
+    function yesNoText(flag) {
+      return flag ? "是" : "否";
+    }
+
+    function calculateBMI() {
+      const heightCm = numberValue("height");
+      const weightKg = numberValue("weight");
+      const bmiField = $("bmi");
+
+      if (!heightCm || !weightKg || heightCm <= 0 || weightKg <= 0) {
+        bmiField.value = "";
+        return "";
+      }
+
+      const heightM = heightCm / 100;
+      const bmi = weightKg / (heightM * heightM);
+      bmiField.value = bmi.toFixed(1);
+      return bmi.toFixed(1);
+    }
+
+    function isCreatinineHigh() {
+      const creatinine = numberValue("creatinine");
+      return creatinine !== null && creatinine > 177;
+    }
+
+    function updateCreatinineStatus() {
+      const creatinine = numberValue("creatinine");
+      const status = $("creatinineStatus");
+
+      if (creatinine === null) {
+        status.textContent = "肌酐 >177 μmol/L：未判断";
+        return;
+      }
+
+      status.textContent = "肌酐 >177 μmol/L：" + (isCreatinineHigh() ? "是" : "否");
+    }
+
+    function isHighRiskSurgery() {
+      return value("surgeryRisk") === "高危" || checked("highRiskSurgery");
+    }
+
+    function hasIschemicHeartDisease() {
+      return checked("cad") || checked("mi") || checked("pci") || checked("cabg") || checked("unstableAngina");
+    }
+
+    function calculateRCRI() {
+      const reasons = [];
+
+      if (isHighRiskSurgery()) reasons.push("高危手术");
+      if (hasIschemicHeartDisease()) reasons.push("缺血性心脏病");
+      if (checked("heartFailure") || checked("decompensatedHF")) reasons.push("心力衰竭");
+      if (checked("stroke")) reasons.push("脑血管病");
+      if (checked("insulinDiabetes")) reasons.push("胰岛素治疗糖尿病");
+      if (isCreatinineHigh()) reasons.push("肌酐 >2.0 mg/dL 或 >177 μmol/L");
+
+      const score = reasons.length;
+      const status = $("rcriStatus");
+      status.textContent = "RCRI = " + score;
+      status.className = score === 0 ? "status green" : score === 1 ? "status yellow" : "status red";
+
+      const list = $("rcriReasons");
+      list.innerHTML = "";
+
+      if (reasons.length === 0) {
+        const item = document.createElement("li");
+        item.textContent = "暂无得分项目";
+        list.appendChild(item);
+      } else {
+        reasons.forEach(reason => {
+          const item = document.createElement("li");
+          item.textContent = "✓ " + reason;
+          list.appendChild(item);
+        });
+      }
+
+      return { score, reasons };
+    }
+
+    function assessMETs() {
+      const activities = [
+        checked("walkBlocks"),
+        checked("climbStairs"),
+        checked("lightHousework"),
+        checked("moderateActivity")
+      ];
+
+      const count = activities.filter(Boolean).length;
+      const good = checked("climbStairs") || checked("moderateActivity") || count >= 3;
+      const result = {
+        good,
+        count,
+        label: good ? "功能状态良好：≥4 METs" : "功能状态较差或不明确：<4 METs 或无法判断"
+      };
+
+      const status = $("metsStatus");
+      status.textContent = result.label;
+      status.className = good ? "status green" : "status yellow";
+
+      return result;
+    }
+
+    function hasActiveCardiacRisk() {
+      return value("troponin") === "升高" ||
+        checked("unstableAngina") ||
+        checked("decompensatedHF") ||
+        checked("seriousArrhythmia") ||
+        checked("severeValveDisease");
+    }
+
+    function isIntermediateOrHighRisk(rcriScore) {
+      return rcriScore >= 2 || value("surgeryRisk") === "中危" || value("surgeryRisk") === "高危";
+    }
+
+    function generateRecommendations() {
+      const rcri = calculateRCRI();
+      const mets = assessMETs();
+      const recommendations = [];
+      const intermediateOrHigh = isIntermediateOrHighRisk(rcri.score);
+      const lvef = numberValue("lvef");
+
+      if (value("surgeryTiming") === "急诊") {
+        recommendations.push("急诊手术：优先处理急诊手术需求，建议围术期加强监测，不因常规检查延误抢救性手术。");
+      }
+
+      if (hasActiveCardiacRisk()) {
+        recommendations.push("存在较高心血管风险，择期手术建议进一步心内科评估或优化后再行手术。");
+      }
+
+      if (rcri.score === 0) {
+        recommendations.push("RCRI 0 分：提示低风险。");
+      } else if (rcri.score === 1) {
+        recommendations.push("RCRI 1 分：提示风险升高。");
+      } else {
+        recommendations.push("RCRI ≥2 分：提示中高风险，建议结合手术风险、功能状态和生物标志物综合判断。");
+      }
+
+      if (mets.good) {
+        recommendations.push("METs：功能状态尚可（≥4 METs）。");
+      } else {
+        recommendations.push("METs：功能状态较差或不明确（<4 METs 或无法判断），需结合 BNP/NT-proBNP、Troponin 或进一步评估。");
+      }
+
+      if (value("bnp") === "升高") {
+        recommendations.push("BNP/NT-proBNP 升高：提示围术期心血管事件风险升高。");
+      } else if (value("bnp") === "未做" && intermediateOrHigh) {
+        recommendations.push("BNP/NT-proBNP 未做且患者属于中高危情况：建议考虑检测。");
+      }
+
+      if (value("troponin") === "升高") {
+        recommendations.push("Troponin 升高：提示需警惕心肌损伤或急性冠脉综合征，建议结合临床进一步评估。");
+      } else if (intermediateOrHigh) {
+        recommendations.push("中高危患者可考虑围术期 Troponin 监测。");
+      }
+
+      if (
+        checked("heartFailure") ||
+        checked("decompensatedHF") ||
+        checked("valveDisease") ||
+        checked("severeValveDisease") ||
+        checked("dyspneaOrChange") ||
+        (lvef !== null && lvef < 40)
+      ) {
+        recommendations.push("Echo：心衰、瓣膜病、呼吸困难、LVEF 低或临床状态变化时，提示考虑心超评估。");
+      }
+
+      if (checked("pacemaker") || checked("icd")) {
+        recommendations.push("起搏器/ICD：建议术前明确设备类型、起搏依赖、最近程控情况和电磁干扰管理方案。");
+      }
+
+      if (recommendations.length === 0) {
+        recommendations.push("目前未识别出明确高危提示；仍需结合病史、体格检查、指南和临床判断综合评估。");
+      }
+
+      const list = $("recommendations");
+      list.innerHTML = "";
+      recommendations.forEach(text => {
+        const item = document.createElement("li");
+        item.textContent = text;
+        list.appendChild(item);
+      });
+
+      return recommendations;
+    }
+
+    function selectedHeartHistory() {
+      const items = [
+        ["冠心病", "cad"],
+        ["既往心肌梗死", "mi"],
+        ["PCI 术后", "pci"],
+        ["CABG 术后", "cabg"],
+        ["心力衰竭", "heartFailure"],
+        ["房颤", "af"],
+        ["其他心律失常", "arrhythmia"],
+        ["起搏器", "pacemaker"],
+        ["ICD", "icd"],
+        ["瓣膜病", "valveDisease"],
+        ["脑血管病史", "stroke"],
+        ["胰岛素治疗糖尿病", "insulinDiabetes"],
+        ["慢性肾功能不全", "ckd"],
+        ["新近或不稳定心绞痛", "unstableAngina"],
+        ["失代偿心衰", "decompensatedHF"],
+        ["严重心律失常", "seriousArrhythmia"],
+        ["严重瓣膜病", "severeValveDisease"]
+      ];
+
+      return items.filter(([_, id]) => checked(id)).map(([label]) => label);
+    }
+
+    function nsqipText() {
+      const fields = [
+        ["Serious complication risk", "nsqipSerious"],
+        ["Any complication risk", "nsqipAny"],
+        ["Cardiac complication risk", "nsqipCardiac"],
+        ["Death risk", "nsqipDeath"]
+      ];
+
+      const result = fields.map(([label, id]) => {
+        const v = value(id);
+        return label + "：" + (v ? v + "%" : "未填写");
+      });
+
+      return result.join("；");
+    }
+
+    function generateReport() {
+      calculateBMI();
+      updateCreatinineStatus();
+      const rcri = calculateRCRI();
+      const mets = assessMETs();
+      const recommendations = generateRecommendations();
+      const history = selectedHeartHistory();
+      const creatinine = value("creatinine");
+
+      const report = [
+        "心脏病患者接受非心脏手术术前麻醉评估报告",
+        "",
+        "一、患者基本信息",
+        "年龄：" + (value("age") || "未填写"),
+        "性别：" + (value("sex") || "未填写"),
+        "身高：" + (value("height") ? value("height") + " cm" : "未填写"),
+        "体重：" + (value("weight") ? value("weight") + " kg" : "未填写"),
+        "BMI：" + (value("bmi") || "未计算"),
+        "ASA 分级：" + (value("asa") || "未填写"),
+        "",
+        "二、手术信息",
+        "手术名称：" + (value("surgeryName") || "未填写"),
+        "手术时机：" + (value("surgeryTiming") || "未填写"),
+        "手术风险：" + (value("surgeryRisk") || "未填写"),
+        "是否为 RCRI 高危手术：" + yesNoText(isHighRiskSurgery()),
+        "",
+        "三、心脏病史",
+        history.length ? history.join("、") : "未勾选明确心脏病史或相关高危病史",
+        "",
+        "四、功能状态",
+        mets.label,
+        "已勾选可完成活动数量：" + mets.count + "/4",
+        "",
+        "五、RCRI 自动评分",
+        "RCRI = " + rcri.score,
+        "得分原因：",
+        rcri.reasons.length ? rcri.reasons.map(reason => "✓ " + reason).join("\n") : "暂无得分项目",
+        "",
+        "六、ACS-NSQIP 手动填写结果",
+        nsqipText(),
+        NSQIP_NOTE,
+        "",
+        "七、检查结果",
+        "最近 ECG：" + value("ecg"),
+        "最近 Echo：" + value("echo"),
+        "LVEF：" + (value("lvef") ? value("lvef") + "%" : "未填写"),
+        "BNP 或 NT-proBNP：" + value("bnp"),
+        "Troponin：" + value("troponin"),
+        "肌酐：" + (creatinine ? creatinine + " μmol/L" : "未填写"),
+        "是否肌酐 >177 μmol/L：" + (creatinine ? yesNoText(isCreatinineHigh()) : "未判断"),
+        "呼吸困难或临床状态变化：" + yesNoText(checked("dyspneaOrChange")),
+        "",
+        "八、辅助评估建议",
+        recommendations.map((text, index) => (index + 1) + ". " + text).join("\n"),
+        "",
+        "九、免责声明",
+        DISCLAIMER
+      ].join("\n");
+
+      $("report").value = report;
+      return report;
+    }
+
+    async function copyReport() {
+      const report = $("report").value || generateReport();
+
+      try {
+        await navigator.clipboard.writeText(report);
+        alert("评估报告已复制。");
+      } catch (error) {
+        $("report").focus();
+        $("report").select();
+        document.execCommand("copy");
+        alert("评估报告已复制。");
+      }
+    }
+
+    function resetForm() {
+      document.querySelectorAll("input").forEach(input => {
+        if (input.type === "checkbox") {
+          input.checked = false;
+        } else if (!input.readOnly) {
+          input.value = "";
+        }
+      });
+
+      document.querySelectorAll("select").forEach(select => {
+        select.selectedIndex = 0;
+      });
+
+      $("bmi").value = "";
+      $("report").value = "";
+      updateAll();
+    }
+
+    function updateAll() {
+      calculateBMI();
+      updateCreatinineStatus();
+      calculateRCRI();
+      assessMETs();
+      generateRecommendations();
+    }
+
+    document.addEventListener("input", updateAll);
+    document.addEventListener("change", updateAll);
+    document.addEventListener("DOMContentLoaded", updateAll);
+  </script>
+</body>
+</html>

@@ -494,6 +494,15 @@
 
     <section class="card" aria-labelledby="rcri-title">
       <h2 id="rcri-title">7. RCRI 自动评分</h2>
+      <p class="hint">勾选 RCRI 评分项目后自动计算总分；上方手术信息、心脏病史和肌酐结果也会同步勾选对应项目。</p>
+      <div class="checkbox-grid">
+        <label class="check"><input id="rcriHighRiskSurgery" class="rcri-item" type="checkbox">高危手术</label>
+        <label class="check"><input id="rcriIhd" class="rcri-item" type="checkbox">缺血性心脏病</label>
+        <label class="check"><input id="rcriHeartFailure" class="rcri-item" type="checkbox">心力衰竭</label>
+        <label class="check"><input id="rcriStroke" class="rcri-item" type="checkbox">脑血管病</label>
+        <label class="check"><input id="rcriInsulinDiabetes" class="rcri-item" type="checkbox">胰岛素治疗糖尿病</label>
+        <label class="check"><input id="rcriCreatinine" class="rcri-item" type="checkbox">肌酐 &gt;2.0 mg/dL 或 &gt;177 μmol/L</label>
+      </div>
       <div id="rcriStatus" class="status yellow">RCRI = 0</div>
       <h3>得分原因</h3>
       <ul id="rcriReasons" class="result-list">
@@ -529,6 +538,14 @@
   <script>
     const DISCLAIMER = "本工具仅用于教学和临床辅助评估，不替代医生最终判断。";
     const NSQIP_NOTE = "ACS-NSQIP 结果：由医生通过官方计算器手动填写，仅供围术期风险沟通与辅助评估使用。";
+    const RCRI_ITEMS = [
+      { id: "rcriHighRiskSurgery", label: "高危手术", active: () => isHighRiskSurgery() },
+      { id: "rcriIhd", label: "缺血性心脏病", active: () => hasIschemicHeartDisease() },
+      { id: "rcriHeartFailure", label: "心力衰竭", active: () => checked("heartFailure") || checked("decompensatedHF") },
+      { id: "rcriStroke", label: "脑血管病", active: () => checked("stroke") },
+      { id: "rcriInsulinDiabetes", label: "胰岛素治疗糖尿病", active: () => checked("insulinDiabetes") },
+      { id: "rcriCreatinine", label: "肌酐 >2.0 mg/dL 或 >177 μmol/L", active: () => isCreatinineHigh() }
+    ];
 
     function $(id) {
       return document.getElementById(id);
@@ -592,15 +609,26 @@
       return checked("cad") || checked("mi") || checked("pci") || checked("cabg") || checked("unstableAngina");
     }
 
-    function calculateRCRI() {
-      const reasons = [];
+    function syncRCRIItems() {
+      RCRI_ITEMS.forEach(item => {
+        const input = $(item.id);
+        const active = item.active();
 
-      if (isHighRiskSurgery()) reasons.push("高危手术");
-      if (hasIschemicHeartDisease()) reasons.push("缺血性心脏病");
-      if (checked("heartFailure") || checked("decompensatedHF")) reasons.push("心力衰竭");
-      if (checked("stroke")) reasons.push("脑血管病");
-      if (checked("insulinDiabetes")) reasons.push("胰岛素治疗糖尿病");
-      if (isCreatinineHigh()) reasons.push("肌酐 >2.0 mg/dL 或 >177 μmol/L");
+        if (active) {
+          if (!input.checked) input.dataset.auto = "true";
+          input.checked = true;
+        } else if (input.dataset.auto === "true") {
+          input.checked = false;
+          input.dataset.auto = "";
+        }
+      });
+    }
+
+    function calculateRCRI() {
+      syncRCRIItems();
+      const reasons = RCRI_ITEMS
+        .filter(item => checked(item.id))
+        .map(item => item.label);
 
       const score = reasons.length;
       const status = $("rcriStatus");
@@ -852,6 +880,7 @@
       document.querySelectorAll("input").forEach(input => {
         if (input.type === "checkbox") {
           input.checked = false;
+          input.dataset.auto = "";
         } else if (!input.readOnly) {
           input.value = "";
         }
@@ -869,13 +898,21 @@
     function updateAll() {
       calculateBMI();
       updateCreatinineStatus();
+      syncRCRIItems();
       calculateRCRI();
       assessMETs();
       generateRecommendations();
     }
 
-    document.addEventListener("input", updateAll);
-    document.addEventListener("change", updateAll);
+    function handleFormChange(event) {
+      if (event.target.classList && event.target.classList.contains("rcri-item")) {
+        event.target.dataset.auto = event.target.checked ? "manual" : "";
+      }
+      updateAll();
+    }
+
+    document.addEventListener("input", handleFormChange);
+    document.addEventListener("change", handleFormChange);
     document.addEventListener("DOMContentLoaded", updateAll);
   </script>
 </body>
